@@ -33,7 +33,7 @@ public class ConsoleLogger : MonoBehaviour
         }
     }
 
-    public static void Log(string msg)
+    public static void Log(string msg, string key = "")
     {
         if (!Instance.enableLogging) return;
 
@@ -42,15 +42,17 @@ public class ConsoleLogger : MonoBehaviour
         MethodBase callingMethod = callingFrame.GetMethod();
         Type callingType = callingMethod.DeclaringType;
 
+        var callerName = key == "" ? callingType?.Name : key;
+
         try
         {
-            var caller = Instance.loggerObjects.First(o => o.name == callingType?.Name);
+            var caller = Instance.loggerObjects.First(o => o.name == callerName);
             if (caller.enabledLogging)
-                UnityEngine.Debug.Log(string.Format("[{0}] {1}", callingType?.Name, msg));
+                UnityEngine.Debug.Log(string.Format("[{0}] {1}", callerName, msg));
         }
         catch (System.Exception)
         {
-            UnityEngine.Debug.Log(string.Format("[{0}] {1}", callingType?.Name, msg));
+            UnityEngine.Debug.Log(string.Format("[{0}] {1}", callerName, msg));
         }
     }
 
